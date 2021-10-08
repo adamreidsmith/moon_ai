@@ -51,8 +51,13 @@ def kl_divergence(p: np.ndarray, q: np.ndarray) -> float:
 class Data(Dataset):
     def __init__(self):
     
-        with open('problems.pkl', 'rb') as f:
-            data = pickle.load(f)
+        with open('problems1.pkl', 'rb') as f:
+            data1 = pickle.load(f)
+
+        with open('problems2.pkl', 'rb') as f:
+            data2 = pickle.load(f)
+
+        data = {**data1, **data2}
 
         self.names = data.keys()
         self.grades, self.start_holds, self.mid_holds, self.end_holds, self.all_holds = [], [], [], [], []
@@ -113,13 +118,6 @@ valid_loader = DataLoader(dataset=valid_data, batch_size=batch_size, shuffle=Tru
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
-        
-        # self.conv_layer = nn.Conv2d(in_channels=1, out_channels=conv_channels, kernel_size=np.array([11, 7]), padding=(5, 3), stride=1)  # Convolution with 4 filters of size 11x7
-        # self.bypass_layer = nn.Conv2d(in_channels=1, out_channels=1, kernel_size=1, stride=1, bias=False)  # Convolution with 1 filter of size 1 to feed info directly to next layer.  Bias set to false so that non-holds are set to zero
-        
-        # self.fc1 = nn.Sequential(nn.Linear((conv_channels + 1) * np.prod(board_size), 50), nn.Sigmoid())  # First fc layer with 5x18x11 neurons -> 50 neurons
-        # self.dropout = nn.Dropout(p=0.5)  # Dropout layer to reduce overtraining
-        # self.fc2 = nn.Sequential(nn.Linear(50, num_grades), nn.Sigmoid())  # Second fc layer
 
         # Input size: (batch_size, 3, 18, 11)
         self.b1 = nn.Sequential(
@@ -163,18 +161,7 @@ class Model(nn.Module):
         inter = self.b3(inter)
         inter = self.b4(inter)
         return self.b5(inter.flatten(start_dim=1))
-
-        # conv = self.conv_layer(problem)*problem
-        # bypass = self.bypass_layer(problem)
         
-        # conv = conv.view(conv.shape[0], -1)
-        # bypass = bypass.view(bypass.shape[0], -1)
-        # inter = t.cat((conv, bypass), 1)
-        
-        # inter = self.fc1(inter)
-        # inter = self.dropout(inter)
-        # return self.fc2(inter)
-
 
 def ordinal_regression_loss(prediction, target):
     return t.pow(nn.MSELoss(reduction='none')(prediction, target).sum(axis=1), 2).mean()

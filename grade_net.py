@@ -50,9 +50,14 @@ def kl_divergence(p: np.ndarray, q: np.ndarray) -> float:
 
 class Data(Dataset):
     def __init__(self):
-    
-        with open('problems.pkl', 'rb') as f:
-            data = pickle.load(f)
+        
+        with open('problems1.pkl', 'rb') as f:
+            data1 = pickle.load(f)
+
+        with open('problems2.pkl', 'rb') as f:
+            data2 = pickle.load(f)
+
+        data = {**data1, **data2}
 
         self.names = data.keys()
         self.grades, self.start_holds, self.mid_holds, self.end_holds, self.all_holds = [], [], [], [], []

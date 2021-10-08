@@ -92,5 +92,16 @@ for i, im_name in enumerate(image_names):
     if i % 100 == 0:
         print('%.2f percent complete. Analyzed %i out of %i problems.' % (i/n_probs*100, i, n_probs))
 
-with open('problems.pkl', 'wb') as f:
-    pickle.dump(master_dict, f)
+n = len(master_dict.keys())
+
+keys1 = list(master_dict.keys())[:n//2]
+keys2 = list(master_dict.keys())[n//2:]
+
+data1 = {key: master_dict[key] for key in keys1}
+data2 = {key: master_dict[key] for key in keys2}
+
+with open('problems1.pkl', 'wb') as f:
+    pickle.dump(data1, f)
+
+with open('problems2.pkl', 'wb') as f:
+    pickle.dump(data2, f)
