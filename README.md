@@ -16,7 +16,8 @@ Generated problems can be viewed through [`compose_problems.ipynb`](compose_prob
     $ sudo pip3 install -r requirements.txt
     
 ## Technologies Used
-* Python
+* Python 3
+* Jupyter Notebook
 * PyTorch
 * OpenCV
 * NumPy
